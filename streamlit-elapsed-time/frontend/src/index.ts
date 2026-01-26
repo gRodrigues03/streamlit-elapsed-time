@@ -57,13 +57,13 @@ const MyComponent: FrontendRenderer<ComponentData> = (args) => {
 
     // First render for this instance
     if (!state) {
-        const date = new Date(data.date);
+        state = {
+            date: new Date(data.date),
+            intervalId: window.setInterval(() => {
+                render(parentElement, state!.date);
+            }, 1000),
+        };
 
-        const intervalId = window.setInterval(() => {
-            render(parentElement, date);
-        }, 1000);
-
-        state = { date, intervalId };
         instances.set(parentElement, state);
     } else {
         // Update date if Streamlit re-renders
