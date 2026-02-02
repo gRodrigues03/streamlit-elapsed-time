@@ -1,11 +1,6 @@
 import {
-    FrontendRenderer,
     FrontendRendererArgs,
 } from "@streamlit/component-v2-lib";
-
-export type ComponentData = {
-    date: string;
-};
 
 type InstanceState = {
     date: Date;
@@ -43,15 +38,16 @@ function getTimeDifference(date: Date): string {
 }
 
 function render(parent: HTMLElement, date: Date): void {
-    const el = parent.querySelector<HTMLElement>("#t-el");
-    if (!el) return;
-
-    el.innerText = getTimeDifference(date);
+    parent.innerText = getTimeDifference(date);
 }
 
-const MyComponent: FrontendRenderer<ComponentData> = (args) => {
-    const { parentElement, data } = args;
-    if (!data?.date) return;
+export default function MyComponent(args: FrontendRendererArgs) {
+    const { data, parentElement } = args;
+    if (!data?.date) {
+        return;
+    }
+
+    parentElement.className='t-el';
 
     let state = instances.get(parentElement);
 
@@ -81,5 +77,3 @@ const MyComponent: FrontendRenderer<ComponentData> = (args) => {
         instances.delete(parentElement);
     };
 };
-
-export default MyComponent;
